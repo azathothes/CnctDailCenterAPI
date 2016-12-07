@@ -15,42 +15,10 @@ route.get('/THZTTS',(req,res)=>{
 		return;
 	}
 
-
 	let obj = common.assembleParamsForTHZTTS(req.query);
-	let keys = Object.keys(obj);
-	//let values = common.generateParamArray(obj);
-    var sql = `insert into us_thjlgl (${keys.toString()}) values (
-        '${obj.ZJ}',
-        '${obj.ZJFHM}',
-        '${obj.BJFHM}',
-        '${obj.LDSJ}',
-        '${obj.THSJ}',
-        '${obj.SFJT}',
-        '${obj.QYBZ}',
-        '${obj.GXR}',
-        '${obj.CJR}',
-        '${obj.GXSJ}',
-        '${obj.CJSJ}',
-        '${obj.BZ}',
-        '${obj.CallSheetID}',
-        '${obj.CallType}',
-        '${obj.Ring}',
-        '${obj.QueueTime}',
-        '${obj.Agent}',
-        '${obj.Exten}',
-        '${obj.Queue}',
-        '${obj.State}',
-        '${obj.RecordFile}',
-        '${obj.FileServer}',
-        '${obj.Province}',
-        '${obj.District}')`;
-    console.log(sql)
-    console.log(obj);
-
-    
-
-	ExecSql('insert into us_thjlgl set zj = "asdsasadasdsad"',[]).then(result=>{
-		
+	
+	
+	ExecSql('insert into us_thjlgl set ?',obj).then(result=>{
 		res.status(200).json(result);
 	}).catch(err=>{
         console.log(err);
