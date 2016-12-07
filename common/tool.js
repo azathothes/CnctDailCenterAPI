@@ -55,10 +55,10 @@ module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 				entitys.us_thjlglEntity[item] = reqquery.CalledNo;
 				break;
 			case "LDSJ":
-				entitys.us_thjlglEntity[item] = mysql.escape(reqquery.Begin);//reqquery.Begin = "2014/2/21 12:22:32"
+				entitys.us_thjlglEntity[item] = reqquery.Begin;//reqquery.Begin = "2014/2/21 12:22:32"
 				break;
 			case "THSJ":
-				entitys.us_thjlglEntity[item] = mysql.escape(reqquery.End);
+				entitys.us_thjlglEntity[item] = reqquery.End;
 				break;
 			case "SFJT":
 				entitys.us_thjlglEntity[item] = reqquery.State === "dealing" ? 1 : 0;

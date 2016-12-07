@@ -17,6 +17,7 @@ route.get('/THZTTS',(req,res)=>{
 
 	let obj = common.assembleParamsForTHZTTS(req.query);
 	
+    console.log(obj);
 	
 	ExecSql('insert into us_thjlgl set ?',obj).then(result=>{
 		res.status(200).json(result);
