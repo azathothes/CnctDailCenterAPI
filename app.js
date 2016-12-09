@@ -29,7 +29,6 @@ route.get('/THZTTS',(req,res)=>{
 
 
 route.get('/ZXZTTS',(req,res)=>{
-	console.log(req.query);
 	if(!common.checkQueryStringForZXZT(req))
 	{
 		res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
@@ -68,7 +67,12 @@ route.get('/MYDJGTS',(req,res)=>{
 	});
 });
 
-
+route.post("*",function(req,res){
+	res.status(404).json({isok:false,mesg:"请使用GET请求！"});
+})
 
 app.use(route);
+module.exports = app;
 app.listen(3000);
+
+
