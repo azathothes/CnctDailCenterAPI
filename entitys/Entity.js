@@ -23,7 +23,8 @@ module.exports.us_thjlglEntity = {
     RecordFile:null,
     FileServer:null,
     Province:null,
-    District:null
+    District:null,
+    SurveyContent:-1
 }
 
     
