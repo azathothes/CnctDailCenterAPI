@@ -17,8 +17,6 @@ route.get('/THZTTS',(req,res)=>{
 
 	let obj = common.assembleParamsForTHZTTS(req.query);
 	
-    console.log(obj);
-	
 	ExecSql('insert into us_thjlgl set ?',obj).then(result=>{
 		res.status(200).json(result);
 	}).catch(err=>{
@@ -27,23 +25,38 @@ route.get('/THZTTS',(req,res)=>{
 	});
 });
 
-route.get('/ZXZTTS',(req,res)=>{
 
-	ExecSql('select * from us_csgl;').then(result=>{
-		console.log(res);
+
+route.get('/ZXZTTS',(req,res)=>{
+	console.log(req.query);
+	if(!common.checkQueryStringForZXZT(req))
+	{
+		res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
+		return;
+	}
+	req.query.ZJ = common.generateGUID();
+	
+	ExecSql('insert into us_zxztgl set ?',req.query).then(result=>{
 		res.status(200).json(result);
 	}).catch(err=>{
-		console.log(err);
+        console.log(err);
+        res.status(401).json({isok:false,mesg:err});
 	});
+
 });
 
 route.get('/MYDJGTS',(req,res)=>{
 
-	ExecSql('select * from us_csgl;').then(result=>{
-		console.log(res);
+	if(!common.checkQueryStringForMYDJGTS(req))
+	{
+		res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
+		return;
+	}
+	ExecSql('update us_thjlgl set SurveyContent = ? where CallSheetID = ?',[req.query.SurveyContent , req.query.CallSheetID]).then(result=>{
 		res.status(200).json(result);
 	}).catch(err=>{
-		console.log(err);
+        console.log(err);
+        res.status(401).json({isok:false,mesg:err});
 	});
 });
 

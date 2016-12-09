@@ -31,6 +31,41 @@ module.exports.checkQueryStringForTHZTTS =(req)=>{
 	}
 }
 
+
+module.exports.checkQueryStringForZXZT =(req)=>{
+	let params = req.query;
+	if( !params.State
+		||!params.Type
+		||!params.Exten
+		||!params.Agent
+		||!params.Time
+		||!params.BusyType)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+
+module.exports.checkQueryStringForMYDJGTS =(req)=>{
+	let params = req.query;
+
+	if( !params.CallSheetID
+		||!params.SurveyContent)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+
+
 module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 	let now = new Date();
 	for (var key in entitys.us_thjlglEntity) {
@@ -38,7 +73,7 @@ module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 		{
 			if(reqquery[key])
 			{
-				entitys.us_thjlglEntity[key] = reqquery[key];
+				entitys.us_thjlglEntity[key] = reqquery[key].trim();
 			}
 		}
 	}
@@ -49,19 +84,19 @@ module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 				entitys.us_thjlglEntity[item] = generateGUID();
 				break;
 			case "ZJFHM":
-				entitys.us_thjlglEntity[item] = reqquery.CallNo;
+				entitys.us_thjlglEntity[item] = reqquery.CallNo.trim();
 				break;
 			case "BJFHM":
-				entitys.us_thjlglEntity[item] = reqquery.CalledNo;
+				entitys.us_thjlglEntity[item] = reqquery.CalledNo.trim();
 				break;
 			case "LDSJ":
-				entitys.us_thjlglEntity[item] = reqquery.Begin;//reqquery.Begin = "2014/2/21 12:22:32"
+				entitys.us_thjlglEntity[item] = reqquery.Begin.trim();//reqquery.Begin = "2014/2/21 12:22:32"
 				break;
 			case "THSJ":
-				entitys.us_thjlglEntity[item] = reqquery.End;
+				entitys.us_thjlglEntity[item] = reqquery.End.trim();
 				break;
 			case "SFJT":
-				entitys.us_thjlglEntity[item] = reqquery.State === "dealing" ? 1 : 0;
+				entitys.us_thjlglEntity[item] = reqquery.State.trim() === "dealing" ? 1 : 0;
 				break;
 			case "QYBZ":
 				entitys.us_thjlglEntity[item] = 1;
@@ -102,7 +137,7 @@ module.exports.generateParamArray = function(reqquery){
 
 
 function generateGUID(){
-	return crypto.createHash('md5').digest('hex');
+	return crypto.createHash('md5').update((new Date).valueOf().toString()).digest('hex');
 }
 function formateDate(fmt){ //author: meizz   
   var o = {   
@@ -123,20 +158,3 @@ function formateDate(fmt){ //author: meizz
 }
 
 module.exports.generateGUID = generateGUID;
-
-/*CallNo=12232212232
-&CalledNo=12232212232
-&CallSheetID=asdsadsasdsda-asdas-asd-asd
-&CallType=normal
-&Ring=30
-&Begin=2016/2/3 12:33
-&End=2016/2/3 12:33
-&QueueTime=232
-&Agent=testagent
-&Exten=testExten
-&Queue=testQueue
-&State=testState
-&RecordFile=testfile.mp3
-&FileServer=c:/test/kk
-&Province=四川
-&District=成都*/
