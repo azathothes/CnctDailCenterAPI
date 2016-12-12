@@ -6,7 +6,6 @@ module.exports.checkQueryStringForTHZTTS =(req)=>{
 	let params = req.query;
 
 	if( !params.CallNo 
-		||!params.CallNo
 		||!params.CalledNo
 		||!params.CallSheetID
 		||!params.CallType
