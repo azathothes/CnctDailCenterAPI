@@ -89,7 +89,7 @@ module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 				entitys.us_thjlglEntity[item] = reqquery.CalledNo.trim();
 				break;
 			case "LDSJ":
-				entitys.us_thjlglEntity[item] = reqquery.Begin.trim();//reqquery.Begin = "2014/2/21 12:22:32"
+				entitys.us_thjlglEntity[item] = reqquery.Begin.trim();;
 				break;
 			case "THSJ":
 				entitys.us_thjlglEntity[item] = reqquery.End.trim();
@@ -107,10 +107,10 @@ module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 				entitys.us_thjlglEntity[item] = "null";
 				break;
 			case "GXSJ":
-				entitys.us_thjlglEntity[item] = formateDate.call(now,'yyyy-MM-dd hh:mm:ss');
+				entitys.us_thjlglEntity[item] = now;
 				break;
 			case "CJSJ":
-				entitys.us_thjlglEntity[item] = formateDate.call(now,'yyyy-MM-dd hh:mm:ss');
+				entitys.us_thjlglEntity[item] = now;
 				break;
 			case "BZ":
 				entitys.us_thjlglEntity[item] = "null";
