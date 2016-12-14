@@ -1,2 +1,4 @@
 node_modules
-logs/ccs.log
+/logs/*.log
+/test/logs/*.log
+/.vscode
