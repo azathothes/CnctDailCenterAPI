@@ -9,6 +9,73 @@ const app = express();
 
 
 
+route.get('/callback',(req,res)=>{
+	if(req.query.RecordFile)
+	{
+		console.log(req.query);
+		if(!common.checkQueryStringForTHZTTS(req))
+		{
+			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
+			return;
+		}
+
+		let obj = common.assembleParamsForTHZTTS(req.query);
+	
+		ExecSql('insert into us_thjlgl SET ?',obj).then(result=>{
+			console.log(result);
+			res.status(200).json({isok:true,mesg:"推送成功！"});
+		}).catch(err=>{
+			logger.error(err);
+        	res.status(401).json({isok:false,mesg:err});
+		});
+	}
+	else if(req.query.Agent)
+	{
+		if(!common.checkQueryStringForZXZT(req))
+		{
+			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
+			return;
+		}
+		req.query.ZJ = common.generateGUID();
+	
+		ExecSql('insert into us_zxzt set ?',req.query).then(result=>{
+			res.status(200).json({isok:true,mesg:"推送成功！"});
+		}).catch(err=>{
+			logger.error(err);
+        	res.status(401).json({isok:false,mesg:err});
+		});
+	}
+	else if(req.query.CallSheetID && req.query.SurveyContent)
+	{
+		if(!common.checkQueryStringForMYDJGTS(req))
+		{
+			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
+			return;
+		}
+		ExecSql('update us_thjlgl set SurveyContent = ? where CallSheetID = ?',[req.query.SurveyContent , req.query.CallSheetID]).then(result=>{
+			if(result.changedRows === 1)
+			{
+				res.status(200).json({isok:true,mesg:"推送成功！"});
+			}
+			else
+			{
+				res.status(404).json({isok:false,mesg:`未找到CallSheetID为 ${req.query.CallSheetID} 的通话记录！`});
+			}
+		}).catch(err=>{
+			logger.error(err);
+        	res.status(401).json({isok:false,mesg:err});
+		});
+	}
+	else{
+		res.status(401).json({isok:false,mesg:"参数错误"});
+	}
+})
+
+
+
+
+
+
 route.get('/THZTTS',(req,res)=>{
 	if(!common.checkQueryStringForTHZTTS(req))
 	{
