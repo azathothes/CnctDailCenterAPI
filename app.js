@@ -5,61 +5,63 @@ const common = require('./common/tool');
 const logger = require('./common/logger');
 const route = express.Router();
 const app = express();
+const bodyparser = require('body-parser');
 
 
 
+route.post('/callback',(req,res)=>{
 
-route.get('/callback',(req,res)=>{
-	if(req.query.RecordFile)
+
+	if(req.body.RecordFile !== undefined)
 	{
-		console.log(req.query);
-		if(!common.checkQueryStringForTHZTTS(req))
+		let result = common.checkQueryStringForTHZTTS(req);
+		if(!result[0])
 		{
-			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
+			res.status(401).json({isok:false,mesg:`缺少必须的参数:${result[1]}`});
 			return;
 		}
 
-		let obj = common.assembleParamsForTHZTTS(req.query);
+		let obj = common.assembleParamsForTHZTTS(req.body);
 	
 		ExecSql('insert into us_thjlgl SET ?',obj).then(result=>{
-			console.log(result);
+			console.log("ok");
 			res.status(200).json({isok:true,mesg:"推送成功！"});
 		}).catch(err=>{
 			logger.error(err);
         	res.status(401).json({isok:false,mesg:err});
 		});
 	}
-	else if(req.query.Agent)
+	else if(req.body.Agent !== undefined)
 	{
 		if(!common.checkQueryStringForZXZT(req))
 		{
 			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
 			return;
 		}
-		req.query.ZJ = common.generateGUID();
+		req.body.ZJ = common.generateGUID();
 	
-		ExecSql('insert into us_zxzt set ?',req.query).then(result=>{
+		ExecSql('insert into us_zxzt set ?',req.body).then(result=>{
 			res.status(200).json({isok:true,mesg:"推送成功！"});
 		}).catch(err=>{
 			logger.error(err);
         	res.status(401).json({isok:false,mesg:err});
 		});
 	}
-	else if(req.query.CallSheetID && req.query.SurveyContent)
+	else if(req.body.CallSheetID !== undefined && req.body.SurveyContent !== undefined)
 	{
 		if(!common.checkQueryStringForMYDJGTS(req))
 		{
 			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
 			return;
 		}
-		ExecSql('update us_thjlgl set SurveyContent = ? where CallSheetID = ?',[req.query.SurveyContent , req.query.CallSheetID]).then(result=>{
+		ExecSql('update us_thjlgl set SurveyContent = ? where CallSheetID = ?',[req.body.SurveyContent ,req.body.CallSheetID]).then(result=>{
 			if(result.changedRows === 1)
 			{
 				res.status(200).json({isok:true,mesg:"推送成功！"});
 			}
 			else
 			{
-				res.status(404).json({isok:false,mesg:`未找到CallSheetID为 ${req.query.CallSheetID} 的通话记录！`});
+				res.status(404).json({isok:false,mesg:`未找到CallSheetID为 ${req.body.CallSheetID} 的通话记录！`});
 			}
 		}).catch(err=>{
 			logger.error(err);
@@ -139,8 +141,10 @@ route.post("*",function(req,res){
 	res.status(404).json({isok:false,mesg:"请使用GET请求！"});
 })
 
+
+app.use(bodyparser.urlencoded({ extended: false }))
 app.use(route);
 module.exports = app;
-app.listen(3000);
+app.listen(10532);
 
 

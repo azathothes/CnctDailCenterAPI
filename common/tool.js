@@ -3,36 +3,76 @@ const crypto = require('crypto');
 const entitys = require('../entitys/Entity');
 const mysql = require('mysql');
 module.exports.checkQueryStringForTHZTTS =(req)=>{
-	let params = req.query;
+	let params = req.body;
 
-	if( !params.CallNo 
-		||!params.CalledNo
-		||!params.CallSheetID
-		||!params.CallType
-		||!params.Ring
-		||!params.Begin
-		||!params.End
-		||!params.QueueTime
-		||!params.Agent
-		||!params.Exten
-		||!params.Queue
-		||!params.State
-		||!params.RecordFile
-		||!params.FileServer
-		||!params.Province
-		||!params.District )
+	if(params.CallNo === undefined)
 	{
-		return false;
+		return [false,"CallNo"];
 	}
-	else
+
+	if(params.CalledNo === undefined)
 	{
-		return true;
+		return [false,"CalledNo"];
 	}
+	if(params.CallSheetID === undefined)
+	{
+		return [false,"CallSheetID"];
+	}
+
+	if(params.CallType === undefined)
+	{
+		return [false,"CallType"];
+	}
+	if(params.Ring === undefined)
+	{
+		return [false,"Ring"];
+	}
+	if(params.Begin === undefined)
+	{
+		return [false,"Begin"];
+	}
+
+	if(params.End === undefined)
+	{
+		return [false,"End"];
+	}
+	if(params.QueueTime === undefined)
+	{
+		return [false,"QueueTime"];
+	}
+	if(params.Agent === undefined)
+	{
+		return [false,"Agent"];
+	}
+
+	if(params.Exten === undefined)
+	{
+		return [false,"Exten"];
+	}
+	if(params.Queue === undefined)
+	{
+		return [false,"Queue"];
+	}
+	if(params.State === undefined)
+	{
+		return [false,"State"];
+	}
+
+	if(params.RecordFile === undefined)
+	{
+		return [false,"RecordFile"];
+	}
+	if(params.FileServer === undefined)
+	{
+		return [false,"FileServer"];
+	}
+	
+	return [true,"ok"];
 }
 
 
 module.exports.checkQueryStringForZXZT =(req)=>{
-	let params = req.query;
+	let params = req.body;
 	if( !params.State
 		||!params.Type
 		||!params.Exten
@@ -50,7 +90,7 @@ module.exports.checkQueryStringForZXZT =(req)=>{
 
 
 module.exports.checkQueryStringForMYDJGTS =(req)=>{
-	let params = req.query;
+	let params = req.body;
 
 	if( !params.CallSheetID
 		||!params.SurveyContent)
@@ -67,6 +107,8 @@ module.exports.checkQueryStringForMYDJGTS =(req)=>{
 
 module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 	let now = new Date();
+	reqquery['Ring'] = 0;
+	reqquery['QueueTime'] = 0;
 	for (var key in entitys.us_thjlglEntity) {
 		if(entitys.us_thjlglEntity.hasOwnProperty(key))
 		{
@@ -89,10 +131,10 @@ module.exports.assembleParamsForTHZTTS=(reqquery)=>{
 				entitys.us_thjlglEntity[item] = reqquery.CalledNo.trim();
 				break;
 			case "LDSJ":
-				entitys.us_thjlglEntity[item] = reqquery.Begin.trim();;
+				entitys.us_thjlglEntity[item] = reqquery.Begin.trim();
 				break;
 			case "THSJ":
-				entitys.us_thjlglEntity[item] = reqquery.End.trim();
+				entitys.us_thjlglEntity[item] = 0;
 				break;
 			case "SFJT":
 				entitys.us_thjlglEntity[item] = reqquery.State.trim() === "dealing" ? 1 : 0;
