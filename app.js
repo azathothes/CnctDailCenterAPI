@@ -11,7 +11,6 @@ const bodyparser = require('body-parser');
 
 route.post('/callback',(req,res)=>{
 
-
 	if(req.body.RecordFile !== undefined)
 	{
 		let result = common.checkQueryStringForTHZTTS(req);
@@ -24,7 +23,7 @@ route.post('/callback',(req,res)=>{
 		let obj = common.assembleParamsForTHZTTS(req.body);
 	
 		ExecSql('insert into us_thjlgl SET ?',obj).then(result=>{
-			console.log("ok");
+		
 			res.status(200).json({isok:true,mesg:"推送成功！"});
 		}).catch(err=>{
 			logger.error(err);
