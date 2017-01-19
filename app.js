@@ -23,7 +23,6 @@ route.post('/callback',(req,res)=>{
 		let obj = common.assembleParamsForTHZTTS(req.body);
 		
 		ExecSql("select ZJ from us_yhgl where fjhqybz = 0 and fjh = ?",{fjh:obj.Agent}).then(yhs=>{
-			
 			if(yhs.length !== 0)
 			{
 				obj.CJR = yhs[0].ZJ;	
@@ -35,10 +34,6 @@ route.post('/callback',(req,res)=>{
 			logger.error(err);
         	res.status(401).json({isok:false,mesg:err});
 		});
-
-
-
-
 	}
 	else if(req.body.Agent !== undefined)
 	{
