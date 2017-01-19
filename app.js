@@ -24,7 +24,10 @@ route.post('/callback',(req,res)=>{
 		
 		ExecSql("select ZJ from us_yhgl where fjhqybz = 0 and fjh = ?",{fjh:obj.Agent}).then(yhs=>{
 			
-			obj.CJR = "test_cjr_zj";
+			if(yhs.length !== 0)
+			{
+				obj.CJR = yhs[0].ZJ;	
+			}
 			return ExecSql('insert into us_thjlgl SET ?',obj);
 		}).then(result=>{
 			res.status(200).json({isok:true,mesg:"推送成功！"});
@@ -44,7 +47,7 @@ route.post('/callback',(req,res)=>{
 			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
 			return;
 		}
-		
+
 		req.body.ZJ = common.generateGUID();
 	
 		ExecSql('insert into us_zxzt set ?',req.body).then(result=>{
