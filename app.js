@@ -79,8 +79,8 @@ route.post('/callback',(req,res)=>{
 	}
 })
 
-route.post("*",function(req,res){
-	res.status(404).json({isok:false,mesg:"请使用GET请求！"});
+route.get("*",function(req,res){
+	res.status(404).json({isok:false,mesg:"请使用Post请求！"});
 })
 
 
