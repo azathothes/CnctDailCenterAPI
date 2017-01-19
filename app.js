@@ -44,6 +44,7 @@ route.post('/callback',(req,res)=>{
 			res.status(401).json({isok:false,mesg:'缺少必须的参数！'});
 			return;
 		}
+		
 		req.body.ZJ = common.generateGUID();
 	
 		ExecSql('insert into us_zxzt set ?',req.body).then(result=>{
